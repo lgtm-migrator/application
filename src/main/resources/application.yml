@@ -1,0 +1,20 @@
+server:
+  port: 8081
+  
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /private/h2-console
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    
+  resources:
+    static-locations:
+    - classpath:/META-INF/resources/
+    - /static
+    - /public
+    
+debug: true
