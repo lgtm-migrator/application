@@ -5,6 +5,12 @@ import org.springframework.cache.support.SimpleCacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
+/**
+ * For single node deployment, in-memory cache is OK.
+ * 
+ * @author Theo Sun
+ *
+ */
 @Configuration
 class SimpleCache {
 

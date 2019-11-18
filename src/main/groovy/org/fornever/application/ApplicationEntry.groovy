@@ -9,8 +9,7 @@ import org.springframework.cache.annotation.EnableCaching
 /**
  * Application Entry
  */
-@SpringBootApplication
-@EnableSimpleCache
+@SpringBootApplication(scanBasePackageClasses=ApplicationEntry.class)
 class ApplicationEntry {
 
 	static void main(String[] args) {
