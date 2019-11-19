@@ -2,6 +2,7 @@ package org.fornever.base.model
 
 import javax.persistence.Column
 import javax.persistence.EntityListeners
+import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
@@ -16,6 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 class BaseTable {
 
 	@Id
+	@GeneratedValue
 	Long id;
 
 	@CreatedBy

@@ -3,10 +3,10 @@ package org.fornever.example.model
 import javax.persistence.Column
 import javax.persistence.Entity
 
-import org.fornever.base.model.BaseBussinessObject
+import org.fornever.base.model.BaseBusinessObject
 
 @Entity
-class ExampleHouse extends BaseBussinessObject {
+class ExampleHouse extends BaseBusinessObject<ExampleHouseState> {
 
 	@Column
 	Double area;

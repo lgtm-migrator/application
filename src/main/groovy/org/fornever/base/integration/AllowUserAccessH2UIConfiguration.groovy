@@ -18,6 +18,7 @@ class AllowUserAccessH2UIConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/private/h2_console/**").permitAll();
 		http.csrf().ignoringAntMatchers("/private/h2-console/**");
 		http.headers().frameOptions().sameOrigin();
+		
 	}
 	
 }

@@ -17,4 +17,4 @@ spring:
     - /static
     - /public
     
-debug: true
+    
