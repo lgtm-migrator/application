@@ -1,8 +1,6 @@
 package org.fornever.base.action
 
 import org.fornever.base.model.BaseBusinessObject
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.ApplicationContext
 
 abstract class BaseBusinessAction<B extends BaseBusinessObject, S> {
 
@@ -12,14 +10,25 @@ abstract class BaseBusinessAction<B extends BaseBusinessObject, S> {
 
 
 	abstract Boolean acceptBusinessObject(Class<?> c);
-	abstract Boolean acceptState(S s);
-	abstract S targetState();
-
-	abstract void process(B instance, Map<String, Object> params) throws BaseBusinessActionException;
-
-	void processMulti(List<B> instances) throws BaseBusinessActionException {
-		for(instance in instances) {
-			this.process(instance)
-		}
-	}
+	/**
+	 * this action name could be used in the model as a method
+	 * 
+	 * 
+	 * @return
+	 */
+	abstract String getActionName();
+	/**
+	 * action supported states
+	 * 
+	 * @param s
+	 * @return
+	 */
+	abstract Boolean acceptFromState(S s);
+	/**
+	 * state after action processed
+	 * 
+	 * @return
+	 */
+	abstract S getToState();
+	abstract void process(B instance, params) throws BaseBusinessActionException;
 }

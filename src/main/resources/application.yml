@@ -18,3 +18,7 @@ spring:
     - /public
     
     
+  security:
+    user:
+      name: user
+      password: password

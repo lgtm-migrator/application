@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class HTTPBasicAuthConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		http.headers().frameOptions().disable(); // enable embeded iframe
 		http.csrf().disable().httpBasic().and().authorizeRequests().anyRequest().authenticated();
 	}
 }
