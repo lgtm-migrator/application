@@ -28,6 +28,8 @@ abstract class BaseBusinessAction<B extends BaseBusinessObject, S, P> {
 	/**
 	 * state after action processed, system will force set the state after process
 	 * 
+	 * default is null, system will not change state
+	 * 
 	 * @return
 	 */
 	S targetState() {

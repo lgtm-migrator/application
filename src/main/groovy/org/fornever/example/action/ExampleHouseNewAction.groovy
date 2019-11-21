@@ -16,7 +16,7 @@ public class ExampleHouseNewAction extends BaseBusinessAction<ExampleHouse, Exam
 
 	@Override
 	public void process(ExampleHouse house, params) throws BaseBusinessActionException {
-
+		
 		if (house.getArea() == null) {
 			house.setArea(new Double(99));
 		}

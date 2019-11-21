@@ -15,7 +15,7 @@ class BusinessObjectFactoryService {
 		return beanFactory.getBean(clazz)
 	}
 
-	def <T extends BaseBusinessObject > T createNewInstance(Class<T> clazz, data) {
+	def <T extends BaseBusinessObject> T createNewInstance(Class<T> clazz, data) {
 		return beanFactory.getBean(clazz).copyFrom(data)
 	}
 }
