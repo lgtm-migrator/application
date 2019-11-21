@@ -1,6 +1,6 @@
 package org.fornever.base.model.internal;
 
-import org.fornever.base.action.BaseBusinessActionException;
+import org.fornever.base.action.internal.BaseBusinessActionException;
 
 public class ActionNotFound extends BaseBusinessActionException {
 

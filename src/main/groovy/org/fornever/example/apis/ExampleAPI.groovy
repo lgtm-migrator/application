@@ -1,5 +1,6 @@
 package org.fornever.example.apis
 
+import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 import org.fornever.base.annotations.API
@@ -24,18 +25,21 @@ class ExampleAPI {
 	List<ExampleHouse> getHouses() {
 		return repo.findAll();
 	}
+	
+	@Autowired
+	EntityManager em;
 
 	@PostMapping("/house")
 	@Transactional
 	ExampleHouse createHouse(@RequestBody Map data) {
 
 		// must create empty instance by this way
-		// so that framework could inject ctx to model
+		// so that framework could inject context to model
 		def newHouse = factory.createNewInstance(ExampleHouse.class, data)
 
 		// invoke action dynamic
 		newHouse.initHouse([price:999]);
-
+		
 		return repo.save(newHouse)
 	}
 }

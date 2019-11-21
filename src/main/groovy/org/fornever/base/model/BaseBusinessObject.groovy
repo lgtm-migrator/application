@@ -7,10 +7,12 @@ import javax.persistence.MappedSuperclass
 import javax.persistence.Transient
 
 import org.fornever.base.action.BaseBusinessAction
+import org.fornever.base.annotations.BusinessAction
 import org.fornever.base.model.internal.ActionNotFound
 import org.fornever.base.model.internal.DuplicateActionFound
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
+import org.springframework.core.annotation.AnnotationUtils
 
 @MappedSuperclass
 abstract class BaseBusinessObject<S> extends BaseTable {
@@ -66,8 +68,20 @@ abstract class BaseBusinessObject<S> extends BaseTable {
 	 */
 	def methodMissing(String methodName, methodArgs) {
 
-		def actions = ctx.getBeansOfType(BaseBusinessAction.class).values()
-		actions = actions.findAll { it.acceptBusinessObject(this.class) && it.acceptFromState(this.state) && it.getActionName().equals(methodName) }
+
+		def actions = ctx.getBeansWithAnnotation(BusinessAction.class).values()
+
+		actions = actions.findAll { it ->
+
+			def annotation = AnnotationUtils.findAnnotation(it.class, BusinessAction.class)
+
+			if(annotation!=null) {
+				return annotation.model().equals(this.class) && it.acceptFromState(this.state) && annotation.name().equals(methodName)
+			} else {
+				return false
+			}
+		}
+
 		switch(actions.size()) {
 			case 0: throw new ActionNotFound(methodName);
 			case 1:
@@ -84,10 +98,10 @@ abstract class BaseBusinessObject<S> extends BaseTable {
 					}
 
 					// getDelegate means 'get current invoke instance'
-					bAction.process(getDelegate(), params)
+					bAction.run(getDelegate(), params)
 				}
 
-			// cache this action to class
+				// cache this action to class
 				this.class.getMetaClass()[methodName] = action
 
 				return action(methodArgs)
