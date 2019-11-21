@@ -23,20 +23,10 @@ abstract class BaseBusinessObject<S> extends BaseTable {
 	@Enumerated(EnumType.STRING)
 	S state;
 
-	@Transient
-	S beforeState;
-
 	@Autowired
 	@Transient
 	private ApplicationContext ctx;
 
-	@Override
-	def void setProperty(String propertyName, Object value) {
-		if(propertyName.equals(S_STATE)) {
-			this.beforeState = this.state;
-		}
-		super.setProperty(propertyName, value);
-	}
 
 	/**
 	 * copy data from object
@@ -101,7 +91,7 @@ abstract class BaseBusinessObject<S> extends BaseTable {
 					bAction.run(getDelegate(), params)
 				}
 
-				// cache this action to class
+			// cache this action to class
 				this.class.getMetaClass()[methodName] = action
 
 				return action(methodArgs)
