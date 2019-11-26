@@ -14,7 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.core.annotation.AnnotationUtils
 
+import groovy.transform.AutoClone
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
 @MappedSuperclass
+@AutoClone
+@ToString(includeNames=true)
+@EqualsAndHashCode
 abstract class BaseBusinessObject<S> extends BaseTable {
 
 	private static final String S_STATE = "state"
@@ -91,8 +98,7 @@ abstract class BaseBusinessObject<S> extends BaseTable {
 					bAction.run(getDelegate(), params)
 				}
 
-			// cache this action to class
-				this.class.getMetaClass()[methodName] = action
+				this.class.getMetaClass()[methodName] = action // cache this action to class
 
 				return action(methodArgs)
 

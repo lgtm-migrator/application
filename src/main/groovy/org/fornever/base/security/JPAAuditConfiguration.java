@@ -16,7 +16,12 @@ public class JPAAuditConfiguration {
 	public AuditorAware<String> auditorProvider() {
 
 		return () -> {
-			return Optional.of(SecurityContextHolder.getContext().getAuthentication().getName());
+			try {
+				return Optional.of(SecurityContextHolder.getContext().getAuthentication().getName());
+			} catch (Exception e) {
+				return Optional.of("SYSTEM");
+			}
+			
 		};
 		
 	}

@@ -11,13 +11,6 @@ spring:
       ddl-auto: update
     show-sql: true
     
-  resources:
-    static-locations:
-    - classpath:/META-INF/resources/
-    - /static
-    - /public
-    
-    
   security:
     user:
       name: user

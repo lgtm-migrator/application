@@ -1,5 +1,7 @@
 package org.fornever.base.action.internal
 
+import groovy.transform.InheritConstructors
+
 /**
  * 
  * Base Exception of Business Action

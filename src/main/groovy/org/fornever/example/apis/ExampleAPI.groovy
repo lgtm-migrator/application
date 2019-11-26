@@ -8,7 +8,9 @@ import org.fornever.base.model.BusinessObjectFactoryService
 import org.fornever.example.jpa.ExampleHouseRepo
 import org.fornever.example.model.ExampleHouse
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 
@@ -26,9 +28,11 @@ class ExampleAPI {
 		return repo.findAll();
 	}
 	
-	@Autowired
-	EntityManager em;
-
+	@GetMapping("/houses/{id}")
+	Optional<ExampleHouse> getHouseById(@PathVariable("id") Long id) {
+		return repo.findById(id)
+	}
+	
 	@PostMapping("/house")
 	@Transactional
 	ExampleHouse createHouse(@RequestBody Map data) {
