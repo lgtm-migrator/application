@@ -2,6 +2,8 @@ package org.fornever.base.meta.autoapi;
 
 import java.lang.reflect.Method
 
+import javax.transaction.Transactional
+
 import org.fornever.base.annotations.BusinessObject
 import org.fornever.base.meta.autoapi.annotations.ExposeAPI
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,6 +45,7 @@ public class AutoAPIController {
 	}
 
 	@RequestMapping("/api/generated/{topic}/{api}")
+	@Transactional
 	Object process(@RequestBody String body, @PathVariable("topic") String topic, @PathVariable("api") String api) {
 		def rt
 		def s = ctx.getBeansWithAnnotation(ExposeAPI.class).find { this.getAPITopicForClass(it.value.class).equals(topic) }
