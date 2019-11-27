@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.core.annotation.AnnotationUtils
 import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -44,21 +45,21 @@ public class AutoAPIController {
 		return null;
 	}
 
-	@RequestMapping("/api/generated/{topic}/{api}")
+	@RequestMapping(path="/api/generated/{topic}/{api}",produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
-	Object process(@RequestBody String body, @PathVariable("topic") String topic, @PathVariable("api") String api) {
+	Object dispatch(@RequestBody String body, @PathVariable("topic") String topic, @PathVariable("api") String api) {
 		def rt
 		def s = ctx.getBeansWithAnnotation(ExposeAPI.class).find { this.getAPITopicForClass(it.value.class).equals(topic) }
 		if(s) {
 			def i = s.value;
 			def iClazz = i.class
-			
+
 			def m = this.getClassMethod(iClazz, api)
-			
+
 			if(m!=null) {
 				def rtType = m.getReturnType();
 				// if return type is not 'void', means null is not accepted
-				def returnValueRequire = !rtType.equals(Void.TYPE) 
+				def returnValueRequire = !rtType.equals(Void.TYPE)
 
 				def params = m.getParameters();
 				switch(params.length) {
@@ -71,6 +72,7 @@ public class AutoAPIController {
 						break;
 					default:
 						def ps = []
+						// do some thing here
 						return m.invoke(i, )
 						break;
 				}
@@ -84,7 +86,7 @@ public class AutoAPIController {
 	}
 
 	@GetMapping("/api/generated")
-	Object list() {
+	Object apiList() {
 		def rt = []
 
 		def exposed = ctx.getBeansWithAnnotation(ExposeAPI.class)
