@@ -2,6 +2,7 @@ package org.fornever.application.configuration;
 
 import org.fornever.base.cache.SimpleCacheConfiguration;
 import org.fornever.base.integration.SwaggerIntegrationConfiguration;
+import org.fornever.base.meta.autoapi.AutoAPIConfiguration;
 import org.fornever.base.model.BusinessObjectFactoryService;
 import org.fornever.base.security.JPAAuditConfiguration;
 import org.fornever.base.security.rbac.RBACSecurityConfiguration;
@@ -16,8 +17,8 @@ import org.springframework.context.annotation.Import;
 	JPAAuditConfiguration.class, 				// create/update user name
 	SwaggerIntegrationConfiguration.class, 		// swagger doc
 	BusinessObjectFactoryService.class,
-	RBACSecurityConfiguration.class
-
+	RBACSecurityConfiguration.class,
+	AutoAPIConfiguration.class
 })
 public class ApplicationConfiguration {
 	

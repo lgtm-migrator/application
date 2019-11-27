@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
-@Transactional
 class RBACUserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired

@@ -88,9 +88,9 @@ abstract class BaseBusinessObject<S> extends BaseTable {
 
 					def params = new HashMap()
 
-					if (args instanceof List && args.size() > 0) {
+					if ((args instanceof List || args.getClass().isArray()) && args.size() > 0) {
 						params = args[0]
-					} else if (args instanceof Map) {
+					} else if (args instanceof Map || args instanceof LinkedHashMap) {
 						params = args
 					}
 
@@ -101,7 +101,6 @@ abstract class BaseBusinessObject<S> extends BaseTable {
 				this.class.getMetaClass()[methodName] = action // cache this action to class
 
 				return action(methodArgs)
-
 
 			default: throw new DuplicateActionFound(methodName);
 		}

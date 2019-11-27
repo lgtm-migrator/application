@@ -1,6 +1,8 @@
 package org.fornever.base.security.rbac.models
 
 import static javax.persistence.CascadeType.ALL
+import static javax.persistence.CascadeType.DETACH
+import static javax.persistence.CascadeType.MERGE
 import static javax.persistence.CascadeType.PERSIST
 import static javax.persistence.CascadeType.REFRESH
 import static javax.persistence.FetchType.EAGER
@@ -36,7 +38,7 @@ class AuthUser extends BaseTable implements UserDetails {
 	@OneToMany(fetch=EAGER,cascade=ALL)
 	Set<Property> properties;
 
-	@ManyToMany(fetch=EAGER, cascade=ALL)
+	@ManyToMany(fetch=EAGER, cascade= [MERGE, PERSIST, REFRESH, DETACH])
 	Set<AuthRole> roles;
 
 	@Override

@@ -1,6 +1,8 @@
 package org.fornever.base.security.rbac.models
 
 import static javax.persistence.CascadeType.ALL
+import static javax.persistence.CascadeType.DETACH
+import static javax.persistence.CascadeType.MERGE
 import static javax.persistence.CascadeType.PERSIST
 import static javax.persistence.CascadeType.REFRESH
 import static javax.persistence.FetchType.EAGER
@@ -24,6 +26,6 @@ class AuthRole extends BaseTable {
 	@Column(length=10240, nullable=true)
 	String description;
 
-	@ManyToMany(fetch=EAGER, cascade=ALL)
+	@ManyToMany(fetch=EAGER, cascade=[MERGE, PERSIST, REFRESH, DETACH])
 	Set<AuthPrivilege> privileges;
 }

@@ -22,9 +22,9 @@ public class ExampleHouseNewAction extends BaseBusinessAction<ExampleHouse, Exam
 		}
 
 		if (params.price) {
-			house.setPrice(params.price);
+			house.setPrice(new Double(params.price));
 		}
-
+		
 	}
 	
 }
