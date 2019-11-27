@@ -63,17 +63,17 @@ class RBACSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
 	@Value('${spring.security.user.name}')
-	private String defaultUser;
+	private String defaultUsername;
 
 	@Value('${spring.security.user.password}')
 	private String defaultPassword;
 
 	@EventListener(ApplicationReadyEvent.class)
 	def afterStartup() {
-		if(userRepository.count()== 0) {
+		if(userRepository.count() == 0 && this.defaultUsername) {
 			// without user
 			def defaultUser = new AuthUser(
-					username:this.defaultUser,
+					username:this.defaultUsername,
 					password:passwordEncoder().encode(this.defaultPassword),
 					roles:[
 						new AuthRole(
@@ -87,9 +87,9 @@ class RBACSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		}
 
 		def apiPrivileges = requestMappingHandlerMapping.getHandlerMethods().entrySet().collect { new AuthPrivilege(privilegeName: "API_${it.key.toString()}") }
-		
+
 		apiPrivileges.add(new AuthPrivilege(privilegeName: "ROLE_API"))
-		
+
 		def roleAPI = new AuthRole(roleName: "ROLE_API", privileges: apiPrivileges.toSet())
 
 		roleRepository.save(roleAPI)

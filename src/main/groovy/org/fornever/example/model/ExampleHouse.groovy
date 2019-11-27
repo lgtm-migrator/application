@@ -6,6 +6,10 @@ import javax.persistence.Entity
 import org.fornever.base.annotations.BusinessObject
 import org.fornever.base.model.BaseBusinessObject
 
+import groovy.transform.AutoClone
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
 /**
  * An example entity
  * 
@@ -14,6 +18,9 @@ import org.fornever.base.model.BaseBusinessObject
  */
 @BusinessObject
 @Entity
+@AutoClone
+@EqualsAndHashCode
+@ToString
 class ExampleHouse extends BaseBusinessObject<ExampleHouseState> {
 
 	@Column
