@@ -8,17 +8,13 @@ import java.lang.annotation.Target;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.annotation.AliasFor;
-import org.springframework.stereotype.Component;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Component
 @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public @interface BusinessObject {
 	
-	@AliasFor(annotation = Component.class)
 	String value() default "";
 	
 }

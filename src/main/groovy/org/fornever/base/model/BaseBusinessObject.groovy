@@ -30,11 +30,6 @@ abstract class BaseBusinessObject<S> extends BaseTable {
 	@Enumerated(EnumType.STRING)
 	S state;
 
-	@Autowired
-	@Transient
-	private ApplicationContext ctx;
-
-
 	/**
 	 * copy data from object
 	 * 
@@ -65,8 +60,8 @@ abstract class BaseBusinessObject<S> extends BaseTable {
 	 */
 	def methodMissing(String methodName, methodArgs) {
 
-
-		def actions = ctx.getBeansWithAnnotation(BusinessAction.class).values()
+		// the class 'BusinessModelSupportConfiguration' defined 'this._getApplicationContext' method
+		def actions = this._getApplicationContext().getBeansWithAnnotation(BusinessAction.class).values()
 
 		actions = actions.findAll { it ->
 

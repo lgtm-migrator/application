@@ -21,9 +21,6 @@ import org.springframework.web.server.ResponseStatusException
 class ExampleAPI {
 
 	@Autowired
-	BusinessObjectFactoryService factory;
-
-	@Autowired
 	ExampleHouseRepo repo;
 
 	@GetMapping("/houses")
@@ -43,15 +40,12 @@ class ExampleAPI {
 
 	@PostMapping("/house")
 	@Transactional
-	ExampleHouse createHouse(@RequestBody Map data) {
-
-		// must create empty instance by this way
-		// so that framework could inject context to model
-		def newHouse = factory.createNewInstance(ExampleHouse.class, data)
+	ExampleHouse createHouse(@RequestBody ExampleHouse newHouse) {
 
 		// invoke action dynamic
 		newHouse.initHouse([price:999]);
 
 		return repo.save(newHouse)
+		
 	}
 }
