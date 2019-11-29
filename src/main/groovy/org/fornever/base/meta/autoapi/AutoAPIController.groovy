@@ -4,8 +4,10 @@ import java.lang.reflect.Method
 
 import javax.transaction.Transactional
 
+import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation
 import org.fornever.base.annotations.BusinessObject
 import org.fornever.base.meta.autoapi.annotations.ExposeAPI
+import org.fornever.base.meta.autoapi.exceptions.RequestParamExtractException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.core.annotation.AnnotationUtils
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException
 
@@ -47,8 +50,12 @@ public class AutoAPIController {
 
 	@RequestMapping(path="/api/generated/{topic}/{api}",produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
-	Object dispatch(@RequestBody String body, @PathVariable("topic") String topic, @PathVariable("api") String api) {
-		def rt
+	Object dispatch(
+			@RequestBody String body,
+			@RequestParam Map<String, String> urlParam,
+			@PathVariable("topic") String topic,
+			@PathVariable("api") String api
+	) {
 		def s = ctx.getBeansWithAnnotation(ExposeAPI.class).find { this.getAPITopicForClass(it.value.class).equals(topic) }
 		if(s) {
 			def i = s.value;
@@ -56,33 +63,83 @@ public class AutoAPIController {
 
 			def m = this.getClassMethod(iClazz, api)
 
-			if(m!=null) {
+			if(m != null) {
+
 				def rtType = m.getReturnType();
+
 				// if return type is not 'void', means null is not accepted
 				def returnValueRequire = !rtType.equals(Void.TYPE)
 
 				def params = m.getParameters();
-				switch(params.length) {
-					case 0:
-						return m.invoke(i)
-						break;
-					case 1:
-						def p0 = getMapper().readValue(body, params[0].type)
-						return m.invoke(i, p0)
-						break;
-					default:
-						def ps = []
-						// do some thing here
-						return m.invoke(i, )
-						break;
+				def rValue = null
+				def ps = []
+
+				if(params.length > 0) {
+
+					def bodyTree = getMapper().readTree(body)
+
+					for(p in params) {
+
+						def pName = p.getName();
+						def pType = p.getType();
+						def pAnnotations = p.getAnnotations();
+
+						if( pAnnotations.any { it.annotationType().equals(RequestBody.class) }) {
+
+							ps.add(getMapper().readValue(body, pType))
+
+						} else if(pAnnotations.any { it.annotationType().equals(RequestParam.class) }) {
+
+							def aReqParam = pAnnotations.find { it.annotationType().equals(RequestParam.class) }
+
+							def sName = aReqParam.value();
+
+							if (sName) {
+								ps.add(DefaultTypeTransformation.castToType(urlParam.get(pName), pType))
+							} else {
+								ps.add(DefaultTypeTransformation.castToType(urlParam, pType))
+							}
+
+						} else if(urlParam.containsKey(pName)) {
+
+							ps.add(DefaultTypeTransformation.castToType(urlParam.get(pName), pType))
+
+						} else if (bodyTree.get(pName) != null) {
+
+							ps.add(getMapper().treeToValue(bodyTree.get(pName), pType))
+
+						} else {
+							
+							try {
+
+								ps.add(getMapper().readValue(body, pType))
+
+							} catch (Exception e) {
+
+								throw new RequestParamExtractException("Can not process api ${api} param ${pName} with payload ${body}")
+
+							}
+
+						}
+
+					}
+
 				}
+
+				rValue = m.invoke(i, *ps)
+
+				if(returnValueRequire && rValue == null) {
+					throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+				} else {
+					return rValue
+				}
+
 			} else {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "API '${api}' of '${iClazz.getName()}' Not Found")
 			}
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Topic '${topic}' Not Found")
 		}
-		return rt
 	}
 
 	@GetMapping("/api/generated")

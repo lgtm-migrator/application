@@ -18,11 +18,7 @@ class ExampleHouseService {
 	@Autowired
 	ExampleHouseRepo repo;
 
-	ExampleHouse createHouse(Map data) {
-
-		// must create empty instance by this way
-		// so that framework could inject context to model
-		def newHouse = factory.createNewInstance(ExampleHouse.class, data)
+	ExampleHouse createHouse(ExampleHouse newHouse, Integer id) {
 
 		// invoke action dynamic
 		newHouse.initHouse([price:999]);
